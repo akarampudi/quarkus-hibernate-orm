@@ -3,6 +3,7 @@ package org.acme.hibernate.orm.cucumber;
 import java.util.List;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -12,7 +13,7 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.RestAssured.when;
 import static org.hamcrest.CoreMatchers.containsString;
 
-public class FruitResourceTest {
+public class FruitsStepDefinition {
 
     private static WireMockServer wireMockServer;
 
@@ -29,18 +30,35 @@ public class FruitResourceTest {
                                 "{\"id\": \"3\",\"name\": \"Banana\"}" +
                                 "{\"id\": \"4\",\"name\": \"Pear\"}")));
 
-        wireMockServer.stubFor(post(urlEqualTo("/resources/fruits"))
-                .withRequestBody(equalToJson("{\"name\" : \"Pear\"}"))
+        wireMockServer.stubFor(post(urlMatching("/resources/fruits"))
+                .withRequestBody(equalTo("{\"name\" : \"Pear\"}"))
+                .willReturn(aResponse()
+                        .withHeader("Content-Type", "application/json")
+                        .withStatus(201)));
+
+        wireMockServer.stubFor(post(urlMatching("/resources/fruits"))
+                .withRequestBody(equalTo("{\"name\" : \"Watermelon\"}"))
                 .willReturn(aResponse()
                         .withHeader("Content-Type", "application/json")
                         .withStatus(201)));
 
     }
 
-    @When("I want to add a new fruit to the shop")
-    public void i_want_to_add_new_fruit_to_the_shop() {
+    @When("I want to add following fruit to the shop")
+    public void i_want_to_add_new_fruit_to_the_shop(String fruit) {
         given().with()
-                .body("{\"name\" : \"Pear\"}")
+                .body("{\"name\" : \"" + fruit + "\"}")
+                .contentType("application/json")
+                .when()
+                .post("http://localhost:8089/resources/fruits")
+                .then()
+                .statusCode(201);
+    }
+
+    @And("I want to add another following fruit to the shop")
+    public void i_want_to_add_another_following_fruit_to_the_shop(String fruit) {
+        given().with()
+                .body("{\"name\" : \"" + fruit + "\"}")
                 .contentType("application/json")
                 .when()
                 .post("http://localhost:8089/resources/fruits")

@@ -99,12 +99,6 @@
             <version>6.9.0</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>io.cucumber</groupId>
-            <artifactId>cucumber-archetype</artifactId>
-            <version>6.9.0</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
     <build>
