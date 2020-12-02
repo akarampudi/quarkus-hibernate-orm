@@ -1,6 +1,9 @@
 package org.acme.hibernate.orm.wiremock;
 
 import com.github.tomakehurst.wiremock.WireMockServer;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +21,7 @@ public class FruitResourceTest {
     public void setup() {
         wireMockServer = new WireMockServer(8089);
         wireMockServer.start();
+        configureFor("localhost", 8089);
         setupStub();
     }
 
@@ -46,7 +50,8 @@ public class FruitResourceTest {
     }
 
     @Test
-    void getAllFruits() {
+    void getAllFruits() throws Exception {
+        // Test with Rest-Assured
         when().get("http://localhost:8089/resources/fruits")
                 .then()
                 .body(containsString("Cherry"),
@@ -55,6 +60,14 @@ public class FruitResourceTest {
                         not(containsString("Pear")))
                 .statusCode(200).log();
 
+        // Test with HttpClient
+        // THEN
+        CloseableHttpClient httpClient = HttpClients.createDefault();
+        HttpGet request = new HttpGet("http://localhost:8089/resources/fruits");
+        httpClient.execute(request);
+
+        // VERIFY
+        verify(getRequestedFor(urlEqualTo("/resources/fruits")));
     }
 
     @Test
