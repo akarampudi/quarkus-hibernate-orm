@@ -111,11 +111,23 @@ Have fun, and join the team of contributors!
 
 ## Running the demo in Kubernetes
 
-This section provides extra information for running both the database and the demo on Kubernetes.
-As well as running the DB on Kubernetes, a service needs to be exposed for the demo to connect to the DB.
+This section provides extra information for running both the database and the demo on Kubernetes. As well as running the
+DB on Kubernetes, a service needs to be exposed for the demo to connect to the DB.
 
-Then, rebuild demo docker image with a system property that points to the DB. 
+Then, rebuild demo docker image with a system property that points to the DB.
 
 ```bash
 -Dquarkus.datasource.jdbc.url=jdbc:postgresql://<DB_SERVICE_NAME>/quarkus_test
 ```
+
+## Rest-Assured
+
+- https://github.com/rest-assured/rest-assured/wiki/Usage
+
+## WireMock
+
+- http://wiremock.org/docs/getting-started/
+
+## Cucumber
+
+- https://cucumber.io/docs/guides/
